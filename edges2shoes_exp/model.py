@@ -776,7 +776,7 @@ class AugmentedCycleGAN(object):
         self.old_lr = lr
 
     def save(self, chk_name):
-        chk_path = os.path.join(self.opt.expr_dir + str('\save_model'), chk_name)
+        chk_path = os.path.join(self.opt.expr_dir + str('/save_model'), chk_name)
         checkpoint = {
             'netG_A_B':self.netG_A_B.state_dict(),
             'netG_B_A':self.netG_B_A.state_dict(),
