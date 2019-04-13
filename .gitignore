@@ -40,3 +40,5 @@ test/data/legacy_serialized.pt
 *~
 .idea
 *.swp
+/edges2shoes_exp/__pycache__
+/checkpoints
