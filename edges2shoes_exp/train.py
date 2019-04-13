@@ -184,6 +184,7 @@ def train_model():
     history_ubo_B = []
 
     create_sub_dirs(opt, ['vis_pred_B'])
+    create_sub_dirs(opt, ['save_model'])
     model.eval()
     for epoch in range(opt.epoch_count, opt.niter + opt.niter_decay + 1):
         epoch_start_time = time.time()
