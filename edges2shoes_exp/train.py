@@ -320,4 +320,15 @@ def train_model():
 
 if __name__ == "__main__":
     train_model()
+    # A: font, B:HW
     # CUDA_VISIBLE_DEVICES=0 python edges2shoes_exp/train.py --dataroot ./datasets/edges2shoes/ --name augcgan_model --numpy_data 0 --input_nc 1 --output_nc 1
+    # CUDA_VISIBLE_DEVICES=0 python edges2shoes_exp/test.py --dataroot ./datasets/edges2shoes/  --chk_path checkpoints/FOLDER/latest --res_dir val_res --metric visual
+
+    """ HW1252 0.1
+    CUDA_VISIBLE_DEVICES=0 python edges2shoes_exp/train.py --dataroot ./datasets/edges2shoes/1252-c_116_6_0.1/ --name augcgan_model_1252_0.1 --numpy_data 0 --input_nc 1 --output_nc 1
+    CUDA_VISIBLE_DEVICES=0 python edges2shoes_exp/test.py --dataroot ./datasets/edges2shoes/1252-c_116_6_0.1/  --chk_path checkpoints/1252-c_116_6_0.1/latest50 --res_dir val_res --metric visual
+    """
+
+    """ ETL
+    CUDA_VISIBLE_DEVICES=0 python edges2shoes_exp/test.py --dataroot ./datasets/edges2shoes/etl_952_size_64_all_0.2_0.2/  --chk_path checkpoints/augcgan_model_ETL/save_model/latest50 --res_dir val_res_ETL --metric visual
+    """

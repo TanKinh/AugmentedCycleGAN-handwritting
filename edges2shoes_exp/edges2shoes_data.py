@@ -167,9 +167,13 @@ class Edges2Shoes(object):
         if subset in ['dev', 'train']:
             self.dir_A = os.path.join(self.root, 'trainA')
             self.dir_B = os.path.join(self.root, 'trainB')
+            self.image_path = os.path.join(self.root, 'valB')
+            self.image_path = sorted(make_dataset(self.image_path))
         elif subset == 'val':  # test set
             self.dir_A = os.path.join(self.root, 'valA')
             self.dir_B = os.path.join(self.root, 'valB')
+            self.image_path = os.path.join(self.root, 'valB')
+            self.image_path = sorted(make_dataset(self.image_path))
         else:
             raise NotImplementedError('subset %s no supported' % subset)
 
@@ -233,8 +237,10 @@ class Edges2Shoes(object):
         if self.opt.output_nc == 1:
             tmp = B_img[0, ...] * 0.299 + B_img[1, ...] * 0.587 + B_img[2, ...] * 0.114
             B_img = tmp.unsqueeze(0)
+        
+        image_path = self.image_path[index]
 
-        return {'A': A_img, 'B': B_img}
+        return {'A': A_img, 'B': B_img, 'image_path' : image_path}
 
     def __len__(self):
         return max(self.A_size, self.B_size)

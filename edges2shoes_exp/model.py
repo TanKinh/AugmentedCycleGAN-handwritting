@@ -775,6 +775,13 @@ class AugmentedCycleGAN(object):
         print('update learning rate: %f -> %f' % (self.old_lr, lr))
         self.old_lr = lr
 
+    def set_input(self, input):
+        self.image_paths = input['image_path']
+
+    # get image paths
+    def get_image_paths(self):
+        return self.image_paths
+
     def save(self, chk_name):
         chk_path = os.path.join(self.opt.expr_dir + str('/save_model'), chk_name)
         checkpoint = {

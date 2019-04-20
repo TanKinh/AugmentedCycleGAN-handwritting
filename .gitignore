@@ -40,5 +40,11 @@ test/data/legacy_serialized.pt
 *~
 .idea
 *.swp
-/edges2shoes_exp/__pycache__
+/edges2shoes_exp/__pycache__/
 /checkpoints
+/edges2shoes_exp/__pycache__/edges2shoes_data.cpython-36.pyc
+/edges2shoes_exp/__pycache__/model.cpython-36.pyc
+/edges2shoes_exp/__pycache__/modules.cpython-36.pyc
+/edges2shoes_exp/__pycache__/networks.cpython-36.pyc
+/edges2shoes_exp/__pycache__/options.cpython-36.pyc
+/edges2shoes_exp/__pycache__/evaluate.cpython-36.pyc

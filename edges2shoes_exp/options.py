@@ -143,3 +143,19 @@ class TestOptions(object):
 
     def parse(self):
         return self.parser.parse_args()
+
+class TestLineOption(object):
+    def __init__(self):
+        self.parser = argparse.ArgumentParser()
+        self.parser.add_argument('--chk_path', required=True, type=str, help='path to checkpoint -- we assume expr_dir is containing dir')
+        self.parser.add_argument('--res_dir', type=str, default='test_res', help='results directory (will create under expr_dir)')
+        self.parser.add_argument('--metric', required=True, type=str, choices=['bpp', 'mse', 'visual', 'noise_sens'])
+        self.parser.add_argument('--input_nc', type=int, default=1, help='# of input image channels')
+        self.parser.add_argument('--output_nc', type=int, default=1, help='# of output image channels')
+        self.parser.add_argument('--font', type=str, default='./datasets/fonts/simhei.ttf', help='the font path')
+        self.parser.add_argument('--font_size', type=int, default=128, help="the font's character size")
+        self.parser.add_argument('--which_epoch', type=str, default='latest', help='which epoch to load? set to latest to use latest cached model')
+        self.parser.add_argument('--offset', type=int, default=0, help="the font's character x and y offset")
+
+    def parse(self):
+        return self.parser.parse_args()
