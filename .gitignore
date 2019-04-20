@@ -48,3 +48,4 @@ test/data/legacy_serialized.pt
 /edges2shoes_exp/__pycache__/networks.cpython-36.pyc
 /edges2shoes_exp/__pycache__/options.cpython-36.pyc
 /edges2shoes_exp/__pycache__/evaluate.cpython-36.pyc
+/augcgan_model_ETL.zip
