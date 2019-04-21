@@ -105,7 +105,7 @@ def visualize_multi_one_img(opt, real_A, model, img_paths, name='multi_test.png'
         for fake_B in line_fake_B:
             # vis_multi_image = torch.cat([real_A.data.cpu().unsqueeze(1), fake_B], dim=1) \
             #     .view(size[0]*(opt.num_multi+1),size[2],size[3])
-            save_path = os.path.join(opt.res_dir, img_paths[id_img].split('/')[5].split('.')[0] + '_' + str(count) + '.png')
+            save_path = os.path.join(opt.res_dir, img_paths[id_img].split('/')[4].split('.')[0] + '_' + str(count) + '.png')
             count += 1
             vutils.save_image(fake_B.cpu(), save_path, \
                 normalize=True, range=(-1,1), nrow=1)
@@ -390,25 +390,25 @@ def test_model():
                     real_B = real_B.cuda()
                     prior_z_B = prior_z_B.cuda()
 
-                visuals = model.generate_cycle(real_A, real_B, prior_z_B)
+                # visuals = model.generate_cycle(real_A, real_B, prior_z_B)
                 img_paths =model.get_image_paths()
                 
                 # print('====',img_paths)
                 img_paths = [img.replace('\\','/') for img in img_paths]
-                visualize_cycle(opt, real_A, visuals, name='cycle_%d.png' % i)
+                # visualize_cycle(opt, real_A, visuals, name='cycle_%d.png' % i)
                 # exit()
                 # visualize generated B with different z_B
-                visualize_multi(opt, real_A, model, name='multi_%d.png' % i)
-                # visualize_multi_one_img(opt, real_A, model, img_paths, name='multi_%d.png' % i)
+                # visualize_multi(opt, real_A, model, name='multi_%d.png' % i)
+                visualize_multi_one_img(opt, real_A, model, img_paths, name='multi_%d.png' % i)
 
-                visualize_cycle_B_multi(opt, real_B, model, name='cycle_B_multi_%d.png' % i)
+                # visualize_cycle_B_multi(opt, real_B, model, name='cycle_B_multi_%d.png' % i)
 
-                visualize_multi_cycle(opt, real_B, model, name='multi_cycle_%d.png' % i)
+                # visualize_multi_cycle(opt, real_B, model, name='multi_cycle_%d.png' % i)
 
                 if vis_inf:
                     # visualize generated B with different z_B inferred from real_B
                     if real_A.size()[0] == opt.batchSize:
-                        visualize_inference(opt, real_A, real_B, model, name='inf_%d.png' % i)
+                        # visualize_inference(opt, real_A, real_B, model, name='inf_%d.png' % i)
                         # visualize_inference_A(opt, real_A, real_B, model, name='inf_A%d.png' % i)
                         pass
 
