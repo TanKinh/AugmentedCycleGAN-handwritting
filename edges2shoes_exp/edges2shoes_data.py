@@ -237,10 +237,15 @@ class Edges2Shoes(object):
         if self.opt.output_nc == 1:
             tmp = B_img[0, ...] * 0.299 + B_img[1, ...] * 0.587 + B_img[2, ...] * 0.114
             B_img = tmp.unsqueeze(0)
+<<<<<<< HEAD
         
         image_path = self.image_path[index]
 
         return {'A': A_img, 'B': B_img, 'image_path' : image_path}
+=======
+
+        return {'A': A_img, 'B': B_img}
+>>>>>>> origin
 
     def __len__(self):
         return max(self.A_size, self.B_size)
