@@ -19,21 +19,31 @@ import random
 import numpy as np
 
 #--------HCCR--------
+
 import caffe
 # -*- coding: utf-8 -*-
 
 import argparse
+import sys
+import numpy as np
 import scipy.misc
+import os
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
+import json
 import collections
+import random
 import platform
+import numpy as np
 import pickle
+import os
 import time
 import sys
 import shutil
 import skimage
+
+
 
 net_file = './content/DeepHCCR/googlenet_deploy.prototxt'
 caffe_model = './content/DeepHCCR/models/googlenet_hccr.caffemodel'
@@ -178,13 +188,17 @@ def visualize_multi_HCCR(opt, real_A, model, name):
 
     list_acc = []
     for ch in multi_fake_B[0]:
-        ch_np = ch.numpy().T
+        ch_np = np.transpose(ch.numpy(), (1, 2, 0))
+        print('shape numpy ', ch_np.shape)
         acc = evaluate_content(ch_np, 1, name)
         if acc != None:
             list_acc.append(acc)
-    
+     
     if list_acc:
-        choice = random.choice(list_acc.argsort()[-3:][::-1])
+        print('list acc ', list_acc)
+        choice = random.choice(np.argsort(np.array(list_acc))[-3:][::-1])
+        print(' choice ', choice)
+        choice = choice[0]
 
     return multi_fake_B[0][choice]
 
@@ -257,7 +271,9 @@ def gen_line(text, opt):
             multi_fake_B = visualize_multi_HCCR(opt, img, model, label_truth)
             results.append(multi_fake_B)
 
+        print('----- result -----', type(results), '  ',type(results[0]), ' ',results[0].size())
         result = reduce((lambda x, y: torch.cat((x, y), -1)), results)
+        print('------------------', result.size())
         # input_img = reduce((lambda x, y: torch.cat((x, y), -1)), inputs)
 
         # # result_img_name = file_name
