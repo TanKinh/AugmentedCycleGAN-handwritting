@@ -61,7 +61,6 @@ def visualize_multi(opt, real_A, model, name='multi_test.png'):
     vutils.save_image(vis_multi_image.cpu(), save_path,
         normalize=True, range=(-1,1), nrow=opt.num_multi+1)
 
-<<<<<<< HEAD
     # print one by one
     # print('image id: ',img_paths)
     # print('size ', multi_fake_B.size())
@@ -117,11 +116,6 @@ def visualize_inference(opt, real_A, real_B, model, name='inf_test.png'):
     """ Generate multi fake_B from real_A, real_B
         AxB ---> Z_B, G_A_B(multi_real_A, multi_Z_B) -> multi_fake_B
         output: |real_A|mul_fake_B
-=======
-def visualize_inference(opt, real_A, real_B, model, name='inf_test.png'):
-    """Generate multi fake_B from real_A, real_B
-        AxB ---> Z_B, G_A_B(multi_real_A, multi_Z_B) -> multi_fake_B 
->>>>>>> origin
     """
     size = real_A.size()
 
@@ -280,10 +274,7 @@ def test_model():
     opt = TestOptions().parse()
     dataroot = opt.dataroot
 
-<<<<<<< HEAD
     print('check point dir ',opt.chk_path)
-=======
->>>>>>> origin
     # extract expr_dir from chk_path
     expr_dir = os.path.dirname(opt.chk_path)
     opt_path = os.path.join(expr_dir, 'opt.pkl')
@@ -386,43 +377,29 @@ def test_model():
         n_vis = opt.batchSize
         #dev_dataset = AlignedIterator(devA, devB, batch_size=n_vis)
         with torch.no_grad():
-<<<<<<< HEAD
             for i, vis_data in enumerate(test_dataset):
-=======
-            for i, vis_data in enumerate(train_dataset):
->>>>>>> origin
                 real_A, real_B = Variable(vis_data['A'], volatile=True), Variable(vis_data['B'], volatile=True)
 
                 prior_z_B = Variable(real_A.data.new(real_A.size()[0], opt.nlatent, 1, 1).normal_(0, 1), volatile=True)
 
                 # print('size of real A ', real_A.size(), ' size of prior_z_B', prior_z_B.size())
-<<<<<<< HEAD
                 #img_path = Variable(vis_data['image_path'])
                 model.set_input(vis_data)
-=======
-
->>>>>>> origin
                 if use_gpu:
                     real_A = real_A.cuda()
                     real_B = real_B.cuda()
                     prior_z_B = prior_z_B.cuda()
 
                 visuals = model.generate_cycle(real_A, real_B, prior_z_B)
-<<<<<<< HEAD
                 img_paths =model.get_image_paths()
                 
                 # print('====',img_paths)
                 img_paths = [img.replace('\\','/') for img in img_paths]
-=======
->>>>>>> origin
                 visualize_cycle(opt, real_A, visuals, name='cycle_%d.png' % i)
                 # exit()
                 # visualize generated B with different z_B
                 visualize_multi(opt, real_A, model, name='multi_%d.png' % i)
-<<<<<<< HEAD
                 # visualize_multi_one_img(opt, real_A, model, img_paths, name='multi_%d.png' % i)
-=======
->>>>>>> origin
 
                 visualize_cycle_B_multi(opt, real_B, model, name='cycle_B_multi_%d.png' % i)
 
@@ -433,10 +410,7 @@ def test_model():
                     if real_A.size()[0] == opt.batchSize:
                         visualize_inference(opt, real_A, real_B, model, name='inf_%d.png' % i)
                         # visualize_inference_A(opt, real_A, real_B, model, name='inf_A%d.png' % i)
-<<<<<<< HEAD
                         pass
-=======
->>>>>>> origin
 
     elif opt.metric == 'noise_sens':
         sensitivity_to_edge_noise(opt, model, test_dataset.next()['B'])
@@ -465,12 +439,8 @@ def parse_opt_file(opt_path):
             return s
 
     opt = None
-<<<<<<< HEAD
     opt_path = (opt_path.replace('\\','/'))
     with open(opt_path,'rb') as f:
-=======
-    with open('D:/work/git/augmented_cyclegan/checkpoints/augcgan_model/opt.pkl','rb') as f:
->>>>>>> origin
         if opt_path.endswith('pkl'):
             opt = pkl.load(f)
         else:
@@ -484,11 +454,6 @@ def parse_opt_file(opt_path):
 
 if __name__ == "__main__":
     # CUDA_VISIBLE_DEVICES=0 python edges2shoes_exp/test.py --dataroot ./datasets/edges2shoes/  --chk_path checkpoints/FOLDER/latest --res_dir val_res --metric visual
-<<<<<<< HEAD
     # A: font, B:HW
     test_model()
     # compute_bpp_MVGauss_B('/home/a-amalma/data/edges2shoes/')
-=======
-    test_model()
-    # compute_bpp_MVGauss_B('/home/a-amalma/data/edges2shoes/')
->>>>>>> origin
