@@ -35,11 +35,11 @@ import sys
 import shutil
 import skimage
 
-net_file = '/content/DeepHCCR/googlenet_deploy.prototxt'
-caffe_model = '/content/DeepHCCR/models/googlenet_hccr.caffemodel'
-mean_file = '/content/DeepHCCR/meanfiles/CASIA1.0_1.1_1.2_mean_112.npy'
+net_file = './content/DeepHCCR/googlenet_deploy.prototxt'
+caffe_model = './content/DeepHCCR/models/googlenet_hccr.caffemodel'
+mean_file = './content/DeepHCCR/meanfiles/CASIA1.0_1.1_1.2_mean_112.npy'
 
-unicode_index = np.loadtxt('/content/DeepHCCR/util/unicode_index.txt', delimiter = ',',dtype = np.int) #7534
+unicode_index = np.loadtxt('./content/DeepHCCR/util/unicode_index.txt', delimiter = ',',dtype = np.int) #7534
 net = caffe.Net(net_file,caffe_model,caffe.TEST)
 
 def get_crop_image(imagepath, img_name):
@@ -117,7 +117,14 @@ def evaluate_content(image, top_k, label_truth):
     rightcount=0
     allcount=0
     
-    print(type(image), 'image shape', image.shape)
+    # print(type(image), 'image shape', image.shape)
+    # black_index = np.where(image < 255 )
+    # min_x = min(black_index[0])
+    # max_x = max(black_index[0])
+    # min_y = min(black_index[1])
+    # max_y = max(black_index[1])
+    # #image = image[min_x:max_x, min_y:max_y, :]
+    # print('image shape after :', image.shape)
     net.blobs['data'].data[...] = transformer.preprocess('data',image)
     out = net.forward()
     label_index = net.blobs['loss'].data[0].flatten().argsort()[-1:-top_k-1:-1] # get top k label of minimine loss
@@ -126,8 +133,9 @@ def evaluate_content(image, top_k, label_truth):
     print ('predict :', labels, 'Index: ',labels, '--- label_truth: ',label_truth, ' --- ', np.sort(list_pro)[-1:-top_k-1:-1])
     for i in range(0,top_k):
         if  labels[i] == int(label_truth):
+            print('=========== predict true =========')
             return np.sort(list_pro)[-1:-top_k-1:-1]
-    
+    print('== predict False')    
     return None
 
 def visualize_multi_HCCR(opt, real_A, model, name):
@@ -144,11 +152,11 @@ def visualize_multi_HCCR(opt, real_A, model, name):
         
     save_path = os.path.join(opt.res_dir, str(name))
     print('print image in path ', save_path)
-    vutils.save_image(vis_multi_image.cpu(), save_path,
-        normalize=True, range=(-1,1), nrow=opt.num_multi+1)
+    # vutils.save_image(vis_multi_image.cpu(), save_path,
+    #    normalize=True, range=(-1,1), nrow=opt.num_multi+1)
     i = 0
     print(multi_fake_B[0].size())
-    print(type(multi_fake_B[0].numpy()))
+#    print(type(multi_fake_B[0].numpy()))
     # n_choice = random.randint(0, opt.num_multi)
     # k_b = random.sample(multi_fake_B[0], 3)
     k_b = multi_fake_B[0].numpy()
@@ -170,7 +178,8 @@ def visualize_multi_HCCR(opt, real_A, model, name):
 
     list_acc = []
     for ch in multi_fake_B[0]:
-        acc = evaluate_content(ch, 1, name)
+        ch_np = ch.numpy().T
+        acc = evaluate_content(ch_np, 1, name)
         if acc != None:
             list_acc.append(acc)
     
@@ -211,13 +220,14 @@ def gen_line(text, opt):
         os.makedirs(res_path)
 
     epochs = opt.which_epoch.split(',')
-    for epoch in range(10):
+    for epoch in range(3):
         results = []
         inputs = []
         opt.which_epoch = epoch
         model = AugmentedCycleGAN(opt, testing=True)
         model.load(opt.chk_path)
-
+        
+        print('--------------new combination----------')
         count = 0
         for ch in text:
             img = draw_single_char(ch, font, x_offset=opt.offset, y_offset=opt.offset)
@@ -244,7 +254,7 @@ def gen_line(text, opt):
             multi_prior_z_B = Variable(img.new(opt.num_multi, opt.nlatent, 1, 1).normal_(0, 1).repeat(size[0], 1, 1, 1), volatile=True)
             count += 1
             # multi_fake_B = visualize_multi(opt, img, model, name='line' + str(count) +  str(epoch) + '.png')
-            multi_fake_B = visualize_multi_HCCR(opt, real_A, model, label_truth)
+            multi_fake_B = visualize_multi_HCCR(opt, img, model, label_truth)
             results.append(multi_fake_B)
 
         result = reduce((lambda x, y: torch.cat((x, y), -1)), results)
@@ -298,7 +308,7 @@ def parse_opt_file(opt_path):
 
 if __name__ == '__main__':
     # text = input("Input text: ")
-    text = '博多駅前'
+    text = '芽英行'
     print(str('他'))
     opt = TestLineOption().parse()
     gen_line(text, opt)
