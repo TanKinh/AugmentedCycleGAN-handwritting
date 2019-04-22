@@ -9,7 +9,7 @@ import numpy as np
 
 DEV_SIZE = 10
 
-def load_edges2shoes(root):
+def load_font2hand(root):
     """loads in memory numpy data files"""
     def _load(fname):
         arr = np.load(os.path.join(root, fname))
@@ -155,7 +155,7 @@ class UnalignedIterator(object):
         return self.num_samples
 
 
-class Edges2Shoes(object):
+class Font2Hand(object):
     def __init__(self, opt, subset, unaligned, fraction, load_in_mem):
         self.opt = opt
         self.root = opt.dataroot
@@ -223,7 +223,8 @@ class Edges2Shoes(object):
         else:
             index_B = index % self.A_size
         B_path = self.B_paths[index_B]
-        # print('(A, B) = (%d, %d)' % (index_A, index_B))
+        # print('(A, B) = (%d, %d)' % (index_B, index_B))
+        # print('(A_size, B_size) = (%d, %d)' % (self.A_size, self.B_size))
         A_img = Image.open(A_path).convert('RGB')
         B_img = Image.open(B_path).convert('RGB')
 
@@ -250,7 +251,7 @@ class DataLoader(object):
     def __init__(self, opt, subset, unaligned, batchSize,
                  shuffle=False, fraction=1., load_in_mem=True, drop_last=False):
         self.opt = opt
-        self.dataset = Edges2Shoes(opt, subset, unaligned, fraction, load_in_mem)
+        self.dataset = Font2Hand(opt, subset, unaligned, fraction, load_in_mem)
         self.dataloader = torch.utils.data.DataLoader(
             self.dataset,
             batch_size=batchSize,

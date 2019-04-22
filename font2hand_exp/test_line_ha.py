@@ -4,7 +4,7 @@ from __future__ import absolute_import
 import os
 import torch
 
-from edges2shoes_data import DataLoader, load_edges2shoes, AlignedIterator, UnalignedIterator
+from font2hand_data import DataLoader, load_font2hand, AlignedIterator, UnalignedIterator
 from PIL import Image, ImageFont, ImageDraw
 from model import StochCycleGAN, AugmentedCycleGAN
 from functools import reduce

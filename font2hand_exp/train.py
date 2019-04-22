@@ -10,7 +10,7 @@ from torch.autograd import Variable
 import torchvision.utils as vutils
 
 from options import TrainOptions, create_sub_dirs
-from edges2shoes_data import DataLoader, load_edges2shoes, AlignedIterator, UnalignedIterator
+from font2hand_data import DataLoader, load_font2hand, AlignedIterator, UnalignedIterator
 from model import StochCycleGAN, AugmentedCycleGAN
 import numpy as np
 from evaluate import eval_mse_A, eval_ubo_B
@@ -108,7 +108,7 @@ def train_model():
             torch.cuda.manual_seed_all(opt.seed)
 
     if opt.numpy_data:
-        trainA, trainB, devA, devB, testA, testB = load_edges2shoes(opt.dataroot)
+        trainA, trainB, devA, devB, testA, testB = load_font2hand(opt.dataroot)
         train_dataset = UnalignedIterator(trainA, trainB, batch_size=opt.batchSize)
         print_log(out_f, '#training images = %d' % len(train_dataset))
         vis_inf = False
@@ -321,14 +321,14 @@ def train_model():
 if __name__ == "__main__":
     train_model()
     # A: font, B:HW
-    # CUDA_VISIBLE_DEVICES=0 python edges2shoes_exp/train.py --dataroot ./datasets/edges2shoes/ --name augcgan_model --numpy_data 0 --input_nc 1 --output_nc 1
-    # CUDA_VISIBLE_DEVICES=0 python edges2shoes_exp/test.py --dataroot ./datasets/edges2shoes/  --chk_path checkpoints/FOLDER/latest --res_dir val_res --metric visual
+    # CUDA_VISIBLE_DEVICES=0 python font2hand_exp/train.py --dataroot ./datasets/font2hand/ --name augcgan_model --numpy_data 0 --input_nc 1 --output_nc 1
+    # CUDA_VISIBLE_DEVICES=0 python font2hand_exp/test.py --dataroot ./datasets/font2hand/  --chk_path checkpoints/FOLDER/latest --res_dir val_res --metric visual
 
     """ HW1252 0.1
-    CUDA_VISIBLE_DEVICES=0 python edges2shoes_exp/train.py --dataroot ./datasets/edges2shoes/1252-c_116_6_0.1/ --name augcgan_model_1252_0.1 --numpy_data 0 --input_nc 1 --output_nc 1
-    CUDA_VISIBLE_DEVICES=0 python edges2shoes_exp/test.py --dataroot ./datasets/edges2shoes/1252-c_116_6_0.1/  --chk_path checkpoints/1252-c_116_6_0.1/latest50 --res_dir val_res --metric visual
+    CUDA_VISIBLE_DEVICES=0 python font2hand_exp/train.py --dataroot ./datasets/font2hand/1252-c_116_6_0.1/ --name augcgan_model_1252_0.1 --numpy_data 0 --input_nc 1 --output_nc 1
+    CUDA_VISIBLE_DEVICES=0 python font2hand_exp/test.py --dataroot ./datasets/font2hand/1252-c_116_6_0.1/  --chk_path checkpoints/1252-c_116_6_0.1/latest50 --res_dir val_res --metric visual
     """
 
     """ ETL
-    CUDA_VISIBLE_DEVICES=0 python edges2shoes_exp/test.py --dataroot ./datasets/edges2shoes/etl_952_size_64_all_0.2_0.2/  --chk_path checkpoints/augcgan_model_ETL/save_model/latest50 --res_dir val_res_ETL --metric visual
+    CUDA_VISIBLE_DEVICES=0 python font2hand_exp/test.py --dataroot ./datasets/font2hand/etl_952_size_64_all_0.2_0.2/  --chk_path checkpoints/augcgan_model_ETL/save_model/latest50 --res_dir val_res_ETL --metric visual
     """

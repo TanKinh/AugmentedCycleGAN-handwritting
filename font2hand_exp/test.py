@@ -5,7 +5,7 @@ import torch
 from torch.autograd import Variable
 import torchvision.utils as vutils
 from options import TestOptions
-from edges2shoes_data import DataLoader, load_edges2shoes, AlignedIterator, UnalignedIterator
+from font2hand_data import DataLoader, load_font2hand, AlignedIterator, UnalignedIterator
 from model import StochCycleGAN, AugmentedCycleGAN
 import pickle as pkl
 import math
@@ -61,22 +61,6 @@ def visualize_multi(opt, real_A, model, name='multi_test.png'):
     vutils.save_image(vis_multi_image.cpu(), save_path,
         normalize=True, range=(-1,1), nrow=opt.num_multi+1)
 
-    # print one by one
-    # print('image id: ',img_paths)
-    # print('size ', multi_fake_B.size())
-    # id_img = 0
-    # for line_fake_B in multi_fake_B:
-    #     count = 0
-    #     for fake_B in line_fake_B:
-    #         # vis_multi_image = torch.cat([real_A.data.cpu().unsqueeze(1), fake_B], dim=1) \
-    #         #     .view(size[0]*(opt.num_multi+1),size[2],size[3])
-    #         save_path = os.path.join(opt.res_dir, img_paths[id_img].split('/')[5].split('.')[0] + '_' + str(count) + '.png')
-    #         count += 1
-    #         vutils.save_image(fake_B.cpu(), save_path, \
-    #             normalize=True, range=(-1,1), nrow=1)
-    #         print('save image in: ', save_path)
-    #     id_img += 1
-
 
 def visualize_multi_one_img(opt, real_A, model, img_paths, name='multi_test.png'):
     """Generate multi fake B from real_A and multi Z_B, format image |read_A|multi_fake_B """
@@ -89,12 +73,6 @@ def visualize_multi_one_img(opt, real_A, model, img_paths, name='multi_test.png'
     multi_fake_B = multi_fake_B.data.cpu().view(
         size[0], opt.num_multi, size[1], size[2], size[3])
 
-    # print all in one line
-    # vis_multi_image = torch.cat([real_A.data.cpu().unsqueeze(1), multi_fake_B], dim=1) \
-    # .view(size[0]*(opt.num_multi+1),size[1],size[2],size[3])    
-    # save_path = os.path.join(opt.res_dir, name)
-    # vutils.save_image(vis_multi_image.cpu(), save_path,
-    #     normalize=True, range=(-1,1), nrow=opt.num_multi+1)
 
     # print one by one
     print('image id: ',img_paths)
@@ -197,7 +175,7 @@ def eval_bpp_MVGauss_B(dataset, mu, logvar):
     return np.mean(bpp)
 
 def compute_bpp_MVGauss_B(dataroot):
-    trainA, trainB, devA, devB, testA, testB = load_edges2shoes(dataroot)
+    trainA, trainB, devA, devB, testA, testB = load_font2hand(dataroot)
     train_dataset = UnalignedIterator(trainA, trainB, batch_size=200)
     print('#training images = %d' % len(train_dataset))
 
@@ -302,20 +280,6 @@ def test_model():
     use_gpu = len(opt.gpu_ids) > 0
 
     print ('use gpu', use_gpu)
-    # trainA, trainB, devA, devB, testA, testB = load_edges2shoes(opt.dataroot)
-    # sub_size = int(len(trainA) * 0.2)
-    # trainA = trainA[:sub_size]
-    # trainB = trainB[:sub_size]
-    # train_dataset = UnalignedIterator(trainA, trainB, batch_size=opt.batchSize)
-    # print('#training images = %d' % len(train_dataset))
-    # vis_inf = False
-
-    # test_dataset = AlignedIterator(testA, testB, batch_size=opt.batchSize)
-    # print('#test images = %d' % len(test_dataset))
-
-    # dev_dataset = AlignedIterator(devA, devB, batch_size=opt.batchSize)
-    # print('#dev images = %d' % len(dev_dataset))
-
     train_data_loader = DataLoader(opt, subset='train', unaligned=True, batchSize=opt.batchSize)
     test_data_loader = DataLoader(opt, subset='val', unaligned=False, batchSize=opt.batchSize)
     dev_data_loader = DataLoader(opt, subset='dev', unaligned=False, batchSize=opt.batchSize)
@@ -453,7 +417,6 @@ def parse_opt_file(opt_path):
     return opt
 
 if __name__ == "__main__":
-    # CUDA_VISIBLE_DEVICES=0 python edges2shoes_exp/test.py --dataroot ./datasets/edges2shoes/  --chk_path checkpoints/FOLDER/latest --res_dir val_res --metric visual
+    # CUDA_VISIBLE_DEVICES=0 python font2hand_exp/test.py --dataroot ./datasets/font2hand/  --chk_path checkpoints/FOLDER/latest --res_dir val_res --metric visual
     # A: font, B:HW
     test_model()
-    # compute_bpp_MVGauss_B('/home/a-amalma/data/edges2shoes/')
