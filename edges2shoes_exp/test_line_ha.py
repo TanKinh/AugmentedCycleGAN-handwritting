@@ -1,4 +1,5 @@
 from __future__ import print_function
+
 from __future__ import absolute_import
 import os
 import torch
@@ -91,7 +92,7 @@ def visualize_multi(opt, real_A, model, name='multi_test.png'):
         size[0], opt.num_multi, size[1], size[2], size[3])
     vis_multi_image = torch.cat([real_A.data.cpu().unsqueeze(1), multi_fake_B], dim=1) \
         .view(size[0]*(opt.num_multi+1),size[1],size[2],size[3])
-        
+
     save_path = os.path.join(opt.res_dir, name)
     print('print image in path ', save_path)
     vutils.save_image(vis_multi_image.cpu(), save_path,
@@ -106,7 +107,7 @@ def visualize_multi(opt, real_A, model, name='multi_test.png'):
     print(multi_fake_B[0][0].size())
     # np_b = np.random.choice(k_b, size=(1, 64, 64))
     choice = random.randint(0, opt.num_multi - 1)
-    # l_choice = []        
+    # l_choice = []
     # for _ in range(1):
     #     l_choice.append(random.randint(0, opt.num_multi -1))
     # print('list choice : ', choice)
@@ -122,11 +123,11 @@ def visualize_multi(opt, real_A, model, name='multi_test.png'):
 def evaluate_content(image, top_k, label_truth):
     transformer = caffe.io.Transformer({'data': net.blobs['data'].data.shape})
     transformer.set_transpose('data', (2,0,1))
-    transformer.set_raw_scale('data', 255) 
+    transformer.set_raw_scale('data', 255)
 
     rightcount=0
     allcount=0
-    
+
     # print(type(image), 'image shape', image.shape)
     # black_index = np.where(image < 255 )
     # min_x = min(black_index[0])
@@ -143,9 +144,9 @@ def evaluate_content(image, top_k, label_truth):
     print ('predict :', labels, 'Index: ',labels, '--- label_truth: ',label_truth, ' --- ', np.sort(list_pro)[-1:-top_k-1:-1])
     for i in range(0,top_k):
         if  labels[i] == int(label_truth):
-            print('=========== predict true =========')
+            #print('=========== predict true =========')
             return np.sort(list_pro)[-1:-top_k-1:-1]
-    print('== predict False')    
+    #print('== predict False')
     return None
 
 def visualize_multi_HCCR(opt, real_A, model, name):
@@ -159,22 +160,22 @@ def visualize_multi_HCCR(opt, real_A, model, name):
         size[0], opt.num_multi, size[1], size[2], size[3])
     vis_multi_image = torch.cat([real_A.data.cpu().unsqueeze(1), multi_fake_B], dim=1) \
         .view(size[0]*(opt.num_multi+1),size[1],size[2],size[3])
-        
+
     save_path = os.path.join(opt.res_dir, str(name))
     print('print image in path ', save_path)
     # vutils.save_image(vis_multi_image.cpu(), save_path,
     #    normalize=True, range=(-1,1), nrow=opt.num_multi+1)
     i = 0
-    print(multi_fake_B[0].size())
+    #print(multi_fake_B[0].size())
 #    print(type(multi_fake_B[0].numpy()))
     # n_choice = random.randint(0, opt.num_multi)
     # k_b = random.sample(multi_fake_B[0], 3)
     k_b = multi_fake_B[0].numpy()
-    print('size : ', k_b.shape)
-    print(multi_fake_B[0][0].size())
+    #print('size : ', k_b.shape)
+    #print(multi_fake_B[0][0].size())
     # np_b = np.random.choice(k_b, size=(1, 64, 64))
     choice = random.randint(0, opt.num_multi - 1)
-    # l_choice = []        
+    # l_choice = []
     # for _ in range(1):
     #     l_choice.append(random.randint(0, opt.num_multi -1))
     # print('list choice : ', choice)
@@ -183,21 +184,18 @@ def visualize_multi_HCCR(opt, real_A, model, name):
     #     print('print image in path ', i_dir)
     #     vutils.save_image(multi_fake_B[0][ch].cpu(), i_dir, normalize=True, range=(-1, 1), nrow=1)
     #     i += 1
-    i_dir =  opt.res_dir + '/' + 'im_k%d.png'%choice
-    vutils.save_image(multi_fake_B[0][choice].cpu(), i_dir, normalize=True, range=(-1, 1), nrow=1)
+    # i_dir =  opt.res_dir + '/' + 'im_k%d.png'%choice
+    # vutils.save_image(multi_fake_B[0][choice].cpu(), i_dir, normalize=True, range=(-1, 1), nrow=1)
 
     list_acc = []
     for ch in multi_fake_B[0]:
         ch_np = np.transpose(ch.numpy(), (1, 2, 0))
-        print('shape numpy ', ch_np.shape)
         acc = evaluate_content(ch_np, 1, name)
         if acc != None:
             list_acc.append(acc)
-     
+
     if list_acc:
-        print('list acc ', list_acc)
         choice = random.choice(np.argsort(np.array(list_acc))[-3:][::-1])
-        print(' choice ', choice)
         choice = choice[0]
 
     return multi_fake_B[0][choice]
@@ -209,39 +207,30 @@ def get_transform(opt):
                                             (0.5, 0.5, 0.5))]
     return transforms.Compose(transform_list)
 
-def gen_line(text, opt):
+def gen_line(text, opt, line):
     result_img_names = []
-
-    opt.nThreads = 1   # test code only supports nThreads = 1
-    opt.batchSize = 1  # test code only supports batchSize = 1
-    opt.serial_batches = True  # no shuffle
-    opt.no_flip = True  # no flip
-    opt.display_id = -1  # no visdom display
 
     font = ImageFont.truetype(opt.font, size=opt.font_size)
 
     print('check point dir ',opt.chk_path)
-    # extract expr_dir from chk_path
-    expr_dir = os.path.dirname(opt.chk_path)
-    opt_path = os.path.join(expr_dir, 'opt.pkl')
-    opt.__dict__.update(parse_opt_file(opt_path))
-    opt.expr_dir = expr_dir
-
-    # create results directory (under expr_dir)
-    res_path = os.path.join(opt.expr_dir, opt.res_dir)
-    opt.res_dir = res_path
-    if not os.path.exists(res_path):
-        os.makedirs(res_path)
-
-    epochs = opt.which_epoch.split(',')
-    for epoch in range(3):
+    for n_choice in range(3):
         results = []
         inputs = []
-        opt.which_epoch = epoch
+        # opt.which_epoch = epoch
+        if n_choice % 2 == 0:
+            opt.chk_path = 'checkpoints/augcgan_model_ETL_0.1_0.1/save_model/latest50'
+        else:
+            opt.chk_path = 'checkpoints/augcgan_model/save_model/latest50'
+        # extract expr_dir from chk_path
+        expr_dir = os.path.dirname(opt.chk_path)
+        opt_path = os.path.join(expr_dir, 'opt.pkl')
+        opt.__dict__.update(parse_opt_file(opt_path))
+        opt.expr_dir = expr_dir
+
         model = AugmentedCycleGAN(opt, testing=True)
         model.load(opt.chk_path)
-        
-        print('--------------new combination----------')
+
+        print(' ----- New combination ', n_choice, ' checkpoint path ',opt.chk_path, '-----')
         count = 0
         for ch in text:
             img = draw_single_char(ch, font, x_offset=opt.offset, y_offset=opt.offset)
@@ -271,20 +260,15 @@ def gen_line(text, opt):
             multi_fake_B = visualize_multi_HCCR(opt, img, model, label_truth)
             results.append(multi_fake_B)
 
-        print('----- result -----', type(results), '  ',type(results[0]), ' ',results[0].size())
         result = reduce((lambda x, y: torch.cat((x, y), -1)), results)
-        print('------------------', result.size())
         # input_img = reduce((lambda x, y: torch.cat((x, y), -1)), inputs)
 
-        # # result_img_name = file_name
-        result_img_name = 'result_' + str(epoch) + '_' + text +  '.png'
-        # input_img_name = 'input_' + opt.name + '_' + text + '.png'
-        # result_img_names.append(result_img_name)
-        
-        save_image(opt.res_dir, result, result_img_name, aspect_ratio=1.0)
+        if (n_choice % 2 == 1):
+            save_image(opt.res_dir + '/' + str(n_choice + 3), result, line, aspect_ratio=1.0)
+        else:
+            save_image(opt.res_dir + '/' + str(n_choice), result, line, aspect_ratio=1.0)
         # save_image(opt.results_dir, input_img, input_img_name, aspect_ratio=opt.aspect_ratio)
 
-    # return {'input': input_img_name, 'result': result_img_names}
 
 def parse_opt_file(opt_path):
 
@@ -324,9 +308,46 @@ def parse_opt_file(opt_path):
 
 if __name__ == '__main__':
     # text = input("Input text: ")
-    text = '芽英行'
-    print(str('他'))
+    #text = '芽英行'
+    #print(str('他'))
     opt = TestLineOption().parse()
-    gen_line(text, opt)
+    #gen_line(text, opt)
+
+    opt.nThreads = 1   # test code only supports nThreads = 1
+    opt.batchSize = 1  # test code only supports batchSize = 1
+
+    opt.serial_batches = True  # no shuffle
+    opt.no_flip = True  # no flip
+    opt.display_id = -1  # no visdom display
+
+    # extract expr_dir from chk_path
+    expr_dir = os.path.dirname(opt.chk_path)
+    opt_path = os.path.join(expr_dir, 'opt.pkl')
+    opt.__dict__.update(parse_opt_file(opt_path))
+    opt.expr_dir = expr_dir
+
+    # create results directory (under expr_dir)
+    res_path = os.path.join(opt.expr_dir, opt.res_dir)
+    opt.res_dir = res_path
+    if not os.path.exists(res_path):
+        os.makedirs(res_path)
+        os.makedirs(res_path + '/0')
+        os.makedirs(res_path + '/1')
+        os.makedirs(res_path + '/2')
+        os.makedirs(res_path + '/3')
+        os.makedirs(res_path + '/4')
+        os.makedirs(res_path + '/5')
+
+    count = 0
+    with open('labels.json', encoding='utf-8') as f:
+        json_load = json.load(f)
+        for line in json_load:
+            count += 1
+            print(count, ' line: ', line,' label: ', json_load[line])
+            gen_line(json_load[line], opt, line)
+            if count == 3:
+                break
+
+
 
     # --chk_path checkpoints/FOLDER/latest --metric visual --which_epoch 50 --offset 6 --res_dir vis_dir
