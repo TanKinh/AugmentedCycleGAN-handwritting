@@ -776,7 +776,7 @@ class AugmentedCycleGAN(object):
         self.old_lr = lr
 
     def set_input(self, input):
-        self.image_paths = input['image_path']
+        self.image_paths = input['A_paths']
 
     # get image paths
     def get_image_paths(self):

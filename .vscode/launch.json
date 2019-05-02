@@ -15,8 +15,8 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "args": ["--chk_path", "checkpoints/FOLDER/latest", "--metric", "visual", "--which_epoch", "50", "--offset", "6", "--res_dir", "vis_res"]
-            // "args": ["--dataroot","./datasets/edges2shoes/", "--name", "augcgan_model", "--numpy_data","0", "--input_nc", "1", "--output_nc", "1"]
+            // "args": ["--chk_path", "checkpoints/FOLDER/latest", "--metric", "visual", "--which_epoch", "50", "--offset", "6", "--res_dir", "vis_res"]
+            "args": ["--dataroot","./datasets/font2hand/etl_952_size_64_all_0.2_0.2/", "--name", "augcgan_model_test_true_fail", "--numpy_data","0", "--input_nc", "1", "--output_nc", "1"]
            // "args": ["--dataroot","./datasets/edges2shoes/", "--chk_path", "./checkpoints/1252-c_116_6_0.1/latest50", "--res_dir", "val_res" , "--metric", "visual", "--input_nc", "1", "--output_nc", "1"]
         },
         {

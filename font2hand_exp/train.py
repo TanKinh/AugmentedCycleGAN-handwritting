@@ -330,5 +330,6 @@ if __name__ == "__main__":
     """
 
     """ ETL
+    CUDA_VISIBLE_DEVICES=0 python font2hand_exp/train.py --dataroot ./datasets/font2hand/etl_952_size_64_all_0.2_0.2/ --name augcgan_model_1252_0.1_test --numpy_data 0 --input_nc 1 --output_nc 1
     CUDA_VISIBLE_DEVICES=0 python font2hand_exp/test.py --dataroot ./datasets/font2hand/etl_952_size_64_all_0.2_0.2/  --chk_path checkpoints/augcgan_model_ETL/save_model/latest50 --res_dir val_res_ETL --metric visual
     """

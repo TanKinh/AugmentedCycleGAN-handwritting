@@ -209,8 +209,8 @@ class Font2Hand(object):
                     mem_A_paths.append(io.BytesIO(fa.read()))
                 with open(B, 'rb') as fb:
                     mem_B_paths.append(io.BytesIO(fb.read()))
-            self.A_paths = mem_A_paths
-            self.B_paths = mem_B_paths
+            # self.A_paths = mem_A_paths
+            # self.B_paths = mem_B_paths
 
         self.A_size = len(self.A_paths)
         self.B_size = len(self.B_paths)
@@ -239,9 +239,9 @@ class Font2Hand(object):
             tmp = B_img[0, ...] * 0.299 + B_img[1, ...] * 0.587 + B_img[2, ...] * 0.114
             B_img = tmp.unsqueeze(0)
         
-        image_path = self.image_path[index]
+        # image_path = self.image_path[index]
 
-        return {'A': A_img, 'B': B_img, 'image_path' : image_path}
+        return {'A': A_img, 'B': B_img, 'A_paths' : A_path, 'B_paths': B_path}
 
     def __len__(self):
         return max(self.A_size, self.B_size)

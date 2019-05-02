@@ -44,8 +44,6 @@ import sys
 import shutil
 import skimage
 
-
-
 net_file = './content/DeepHCCR/googlenet_deploy.prototxt'
 caffe_model = './content/DeepHCCR/models/googlenet_hccr.caffemodel'
 mean_file = './content/DeepHCCR/meanfiles/CASIA1.0_1.1_1.2_mean_112.npy'

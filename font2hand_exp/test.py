@@ -355,7 +355,7 @@ def test_model():
                     prior_z_B = prior_z_B.cuda()
 
                 # visuals = model.generate_cycle(real_A, real_B, prior_z_B)
-                img_paths =model.get_image_paths()
+                img_paths = model.get_image_paths()
                 
                 # print('====',img_paths)
                 img_paths = [img.replace('\\','/') for img in img_paths]
